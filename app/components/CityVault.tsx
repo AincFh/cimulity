@@ -4,10 +4,10 @@ import { useState, type ChangeEvent } from 'react';
 import { exportCityBackup, MAX_CITY_BACKUP_CHARS, readCityBackup, type CityBackupMeta } from '@/game/core/cityBackup';
 import { getWorld, installCityBackup, saveWorld } from '@/game/core/worldStore';
 
-interface CityVaultProps { onClose: () => void; }
+interface CityVaultProps { onClose: () => void; onNewCity: () => void; }
 interface PendingBackup { worldJSON: string; meta: CityBackupMeta; name: string; }
 
-export function CityVault({ onClose }: CityVaultProps) {
+export function CityVault({ onClose, onNewCity }: CityVaultProps) {
   const [pending, setPending] = useState<PendingBackup | null>(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -116,7 +116,7 @@ export function CityVault({ onClose }: CityVaultProps) {
         </div>
         {error && <p className="city-vault-error" role="alert">{error}</p>}
         {message && <p className="city-vault-message" role="status">{message}</p>}
-        <footer className="city-vault-footer">No account · No uploads · Validated saves only · Local browser storage</footer>
+        <footer className="city-vault-footer"><span>No account · No uploads · Validated saves only · Local browser storage</span><button type="button" className="city-vault-new" onClick={() => { onNewCity(); onClose(); }}>New city / 新建城市</button></footer>
       </section>
     </div>
   );
