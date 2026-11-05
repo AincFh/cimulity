@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -19,27 +21,45 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
 
       # A failing test fails this job, so the deploy job (needs: build) never runs.
       - run: npm test
-
+      - run: npm run lint
       - run: npm run build
+      - name: Verify static project-Pages export
+        run: |
+          test -s out/index.html
+          test -d out/_next
+          grep -q '/cimulity/' out/index.html
+      - name: Install Chromium QA driver
+        run: python -m pip install selenium==4.37.0
+      - name: Browser test city rendering, time controls and mobile viewport
+        run: python tests/browser-qa.py
+      - name: Preserve gameplay screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cimulity-chrome-qa
+          path: test-artifacts/browser/
+          if-no-files-found: ignore
 
-      - uses: actions/configure-pages@v6
+      - uses: actions/configure-pages@v5
 
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           path: out
 
   deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -47,4 +67,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4

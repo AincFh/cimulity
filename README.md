@@ -1,5 +1,9 @@
 # Cimulity
 
+> **AincFh 独立 Fork 开发说明：**该仓库基于 [zeikar/cimulity](https://github.com/zeikar/cimulity) 的 MIT 开源代码。本 Fork 的目标试玩地址为 https://aincfh.github.io/cimulity/ ，**只有当主分支构建、真实浏览器验收及 GitHub Pages 部署全部通过后才视为上线**。原作者演示站不等于此 Fork 的部署证明。本分支正在修复 CI 和项目子路径下的静态导出检查。
+
+
+
 [![Built with HyperClaude](https://img.shields.io/badge/built%20with-HyperClaude-7c3aed)](http://zeikar.dev/hyperclaude/)
 
 **Open-source minimal city simulation game in the browser.**
