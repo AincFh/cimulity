@@ -72,3 +72,64 @@ body {
   .city-mobile-dock{gap:4px;padding:6px;left:6px;right:6px}
   .city-mobile-dock button{padding:9px 7px;font-size:11px}
 }
+
+
+/* City Vault — deliberate, local-first save management. Above the mobile HUD. */
+.city-desktop-vault {
+  position:fixed;top:16px;right:148px;z-index:1002;
+  min-height:38px;padding:8px 13px;border:1px solid rgba(205,234,225,.38);
+  border-radius:8px;background:rgba(17,36,43,.89);color:#f0faf6;
+  font:600 12px/1.2 system-ui,sans-serif;cursor:pointer;
+  box-shadow:0 4px 14px #001b224d;
+}
+.city-desktop-vault:hover {background:rgba(39,72,74,.96)}
+.city-desktop-vault:focus-visible {outline:2px solid #c4e9da;outline-offset:3px}
+.city-vault-overlay {
+  position:fixed;inset:0;z-index:2200;display:grid;place-items:center;
+  padding:16px;isolation:isolate;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+.city-vault-backdrop {position:absolute;inset:0;background:rgba(3,13,21,.73);backdrop-filter:blur(7px)}
+.city-vault-dialog {
+  position:relative;width:min(100%,545px);max-height:min(92dvh,740px);overflow:auto;
+  color:#e6f3ee;background:linear-gradient(140deg,#1d353c,#10222c 72%);
+  border:1px solid #cee5db3d;border-radius:19px;
+  box-shadow:0 28px 90px #000a0ed9;
+  padding:26px 28px 18px;
+}
+.city-vault-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.city-vault-eyebrow{font:700 10px/1.3 ui-monospace,Consolas,monospace;letter-spacing:.17em;color:#97c5b8}
+.city-vault-heading h2{font:700 29px/1.2 system-ui,sans-serif;letter-spacing:-.035em;color:#f4f9f5;margin:7px 0 0}
+.city-vault-heading h2 small{font-size:14px;color:#b1c9c1;letter-spacing:0;font-weight:500;margin-left:6px}
+.city-vault-close{width:35px;height:35px;flex-shrink:0;border-radius:50%;border:1px solid #ffffff36;background:#ffffff16;color:#edf6f1;font-size:24px;cursor:pointer}
+.city-vault-lead{font-size:13px;line-height:1.65;color:#bbd0ca;margin:16px 0 19px}
+.city-vault-lead span{display:block;color:#86b3a6;margin-top:5px}
+.city-vault-section{background:#081d285e;border:1px solid #ffffff1c;border-radius:13px;padding:18px;margin:11px 0}
+.city-vault-step{display:flex;align-items:center;gap:11px;color:#9dd7be;font:700 12px/1.3 ui-monospace,Consolas,monospace}
+.city-vault-step span{color:#e2f0e9;letter-spacing:.04em}
+.city-vault-section p{color:#b9cac9;font-size:13px;line-height:1.55;margin:10px 0 14px}
+.city-vault-primary,.city-vault-upload,.city-vault-danger{display:flex;width:100%;justify-content:center;align-items:center;min-height:40px;padding:10px 12px;border:0;border-radius:9px;font:650 13px/1.3 system-ui,sans-serif;cursor:pointer;text-align:center}
+.city-vault-primary{background:#b9dec8;color:#102a22}
+.city-vault-primary:hover{background:#d7f0df}
+.city-vault-upload{background:#e4f4f20c;color:#c6e9de;border:1px dashed #a1ccb580}
+.city-vault-upload:hover{background:#b9dec820}
+#city-vault-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.city-vault-preview{display:flex;flex-direction:column;gap:6px;margin-top:12px;padding:12px;background:#112a32;border-radius:9px;color:#b5cdc5;font-size:12px;overflow-wrap:anywhere}
+.city-vault-preview strong{font-size:13px;color:#f5faf8}
+.city-vault-danger{margin-top:10px;background:#e2a397;color:#34201f}
+.city-vault-danger:hover{background:#f3beb1}
+.city-vault-error,.city-vault-message{font-size:12px;line-height:1.5;border-radius:8px;padding:11px 12px;margin-top:12px}
+.city-vault-error{color:#ffdbd7;background:#7536378a}
+.city-vault-message{color:#c9efd6;background:#1f573a80}
+.city-vault-footer{border-top:1px solid #ffffff24;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:17px;padding-top:14px;color:#88aaa4;font:11px/1.4 system-ui,sans-serif}
+.city-vault-new{background:none;border:1px solid #ffffff30;border-radius:7px;padding:9px 11px;color:#c5d2cf;white-space:nowrap;cursor:pointer}
+.city-vault-new:hover{background:#ffffff16}
+.city-vault-dialog :is(button,label):focus-visible{outline:2px solid #e4ffe7;outline-offset:3px}
+@media(max-width:640px){
+  .city-desktop-vault{display:none}
+  .city-vault-overlay{padding:10px}
+  .city-vault-dialog{max-height:calc(100dvh - 25px);padding:21px 17px 16px;border-radius:16px}
+  .city-vault-heading h2{font-size:25px}
+  .city-vault-section{padding:14px}
+  .city-vault-footer{flex-direction:column;align-items:flex-start}
+  .city-vault-new{align-self:stretch}
+}
