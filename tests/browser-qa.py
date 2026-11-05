@@ -81,14 +81,14 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert layout["dockVisible"] and layout["dockBottom"]<=layout["viewportHeight"],layout
         assert not layout["horizontalOverflow"],layout
         browser.save_screenshot(str(PROOF/"city-mobile-map-unobstructed.png"))
-        build=browser.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='建造']")
+        build=browser.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='Build']")
         build.click()
         assert browser.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='true'
         assert browser.find_element(By.XPATH,"//button[contains(., 'Residential')]").is_displayed()
         browser.save_screenshot(str(PROOF/"city-mobile-tools-open.png"))
         build.click()
         assert browser.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='false'
-        budget=browser.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='统计']")
+        budget=browser.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='Stats']")
         budget.click()
         assert browser.find_element(By.ID,'city-mobile-hud').get_attribute('data-open')=='true'
         assert browser.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='false'
