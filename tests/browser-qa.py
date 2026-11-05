@@ -66,7 +66,38 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
           newCity:[...document.querySelectorAll('button')].some(x=>x.textContent?.includes('New City'))
         }""")
         assert mobile["canvas"] and mobile["newCity"],mobile
-        browser.save_screenshot(str(PROOF/"city-mobile.png"))
+        layout=browser.execute_script("""return (() => {
+          const t=document.querySelector('.city-tools-shell');
+          const h=document.querySelector('.city-hud-shell');
+          const dock=document.querySelector('.city-mobile-dock');
+          const rect=dock.getBoundingClientRect();
+          return {toolsHidden:getComputedStyle(t).display==='none',
+            hudHidden:getComputedStyle(h).display==='none',
+            dockVisible:getComputedStyle(dock).display!=='none',
+            dockBottom:rect.bottom,viewportHeight:innerHeight,
+            horizontalOverflow:document.documentElement.scrollWidth>innerWidth+4};
+        })()""")
+        assert layout["toolsHidden"] and layout["hudHidden"],layout
+        assert layout["dockVisible"] and layout["dockBottom"]<=layout["viewportHeight"],layout
+        assert not layout["horizontalOverflow"],layout
+        browser.save_screenshot(str(PROOF/"city-mobile-map-unobstructed.png"))
+        build=browser.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='建造']")
+        build.click()
+        assert browser.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='true'
+        assert browser.find_element(By.XPATH,"//button[contains(., 'Residential')]").is_displayed()
+        browser.save_screenshot(str(PROOF/"city-mobile-tools-open.png"))
+        build.click()
+        assert browser.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='false'
+        budget=browser.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='统计']")
+        budget.click()
+        assert browser.find_element(By.ID,'city-mobile-hud').get_attribute('data-open')=='true'
+        assert browser.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='false'
+        browser.save_screenshot(str(PROOF/"city-mobile-finances-open.png"))
+        budget.click()
+        assert browser.find_element(By.ID,'city-mobile-hud').get_attribute('data-open')=='false'
+        mobile["layout"]=layout
+        mobile["toolsToggle"]=True
+        mobile["statsToggle"]=True
         errors=[e["message"] for e in browser.get_log("browser") if e["level"]=="SEVERE"]
         local_errors=[e for e in errors if "127.0.0.1" in e or "Uncaught" in e]
         assert not local_errors,local_errors
