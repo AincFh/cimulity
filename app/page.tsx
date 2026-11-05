@@ -33,6 +33,8 @@ export default function Home() {
   const [resetNonce, setResetNonce] = useState(0);
   const [speedMultiplier, setSpeedMultiplier] = useState<1 | 2 | 3>(1);
   const [paused, setPaused] = useState(false);
+  // On narrow screens the map stays unobstructed until a tool or stats panel is opened.
+  const [mobilePanel, setMobilePanel] = useState<'tools' | 'hud' | null>(null);
   // React state is the single source of truth for the active data-view overlay.
   // useState's setter is already stable so no useCallback is needed.
   const [dataView, setDataView] = useState<DataView>('none');
@@ -120,6 +122,7 @@ export default function Home() {
     setSelectedTile(null);
     setInspect(null);
     setResetNonce((n) => n + 1);
+    setMobilePanel(null);
   }, []);
 
   return (
@@ -141,6 +144,7 @@ export default function Home() {
         dataView={dataView}
       />
       <button
+        className="city-desktop-new"
         onClick={handleNewCity}
         style={{
           position: 'fixed',
@@ -159,6 +163,7 @@ export default function Home() {
       >
         New City
       </button>
+      <div id="city-mobile-hud" className="city-hud-shell" data-open={mobilePanel === "hud"}>
       <GameHUD
         selectedTile={selectedTile}
         fps={fps}
@@ -181,11 +186,13 @@ export default function Home() {
         dataView={dataView}
         onDataViewChange={setDataView}
       />
+      </div>
       <TileInfoPanel
         info={inspect?.info ?? null}
         anchor={inspect?.anchor ?? null}
         onClose={() => setInspect(null)}
       />
+      <div id="city-mobile-tools" className="city-tools-shell" data-open={mobilePanel === "tools"}>
       <Toolbar
         currentTool={currentTool}
         onToolChange={handleToolChange}
@@ -194,6 +201,21 @@ export default function Home() {
         onPauseToggle={handlePauseClick}
         onSpeedChange={handleSpeedClick}
       />
+      </div>
+      <div className="city-mobile-dock" aria-label="城市建设移动控制栏">
+        <div className="city-mobile-metrics" aria-live="off">
+          <strong>◈ {Math.round(sim.money).toLocaleString('en-US')}</strong>
+          <span>POP {sim.population.toLocaleString('en-US')}</span>
+        </div>
+        <button type="button" className={mobilePanel === 'tools' ? 'active' : ''}
+          aria-expanded={mobilePanel === 'tools'} aria-controls="city-mobile-tools"
+          onClick={() => setMobilePanel(mobilePanel === 'tools' ? null : 'tools')}>Build</button>
+        <button type="button" className={mobilePanel === 'hud' ? 'active' : ''}
+          aria-expanded={mobilePanel === 'hud'} aria-controls="city-mobile-hud"
+          onClick={() => setMobilePanel(mobilePanel === 'hud' ? null : 'hud')}>Stats</button>
+        <button type="button" onClick={handlePauseClick}>{paused ? 'Resume' : 'Pause'}</button>
+        <button type="button" onClick={handleNewCity} title="Start a new city (asks for confirmation)">New</button>
+      </div>
     </div>
   );
 }

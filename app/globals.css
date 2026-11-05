@@ -24,3 +24,51 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* CITY MOBILE: the world stays visible; detailed controls are summoned on demand.
+   Desktop keeps the inherited game panels unchanged. */
+.city-hud-shell,.city-tools-shell{display:contents}
+.city-mobile-dock{display:none}
+@media(max-width:640px){
+  .city-desktop-new{display:none}
+  .city-hud-shell,.city-tools-shell{display:none}
+  .city-hud-shell[data-open="true"],.city-tools-shell[data-open="true"]{display:contents}
+  .city-hud-shell[data-open="true"]>div:first-child{
+    position:fixed!important;top:12px!important;left:12px!important;
+    right:12px!important;width:auto!important;max-height:calc(100dvh - 110px)!important;
+    overflow-y:auto!important;pointer-events:auto!important;z-index:1200!important;
+    border:1px solid #ffffff33;border-radius:14px!important;
+    background:rgba(15,24,33,.95)!important;
+    box-shadow:0 12px 36px #06131788;
+  }
+  .city-tools-shell[data-open="true"]>div:first-child{
+    position:fixed!important;bottom:78px!important;left:12px!important;right:12px!important;
+    width:auto!important;max-width:none!important;
+    max-height:min(61dvh,520px)!important;overflow:auto!important;
+    border-radius:14px!important;z-index:1200!important;
+    border:1px solid #ffffff33;background:rgba(15,24,33,.96)!important;
+    box-shadow:0 12px 36px #06131788;
+  }
+  .city-tools-shell[data-open="true"]>div:first-child button{min-height:36px;touch-action:manipulation}
+  .city-mobile-dock{
+    display:flex;align-items:center;gap:7px;position:fixed;z-index:1500;
+    left:10px;right:10px;bottom:10px;min-height:59px;
+    border:1px solid rgba(190,215,209,.3);border-radius:16px;
+    padding:8px;background:rgba(12,25,32,.95);color:#e6f0ee;
+    box-shadow:0 8px 30px rgba(0,0,0,.3);backdrop-filter:blur(12px);
+  }
+  .city-mobile-metrics{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+  .city-mobile-metrics strong{font:700 13px/1.25 system-ui, sans-serif;white-space:nowrap}
+  .city-mobile-metrics span{font:500 10px/1.2 system-ui,sans-serif;color:#9fb8b5}
+  .city-mobile-dock button{
+    border:1px solid #ffffff28;border-radius:9px;background:#253842;color:#e8f5ee;
+    padding:10px 9px;font-size:12px;line-height:1;white-space:nowrap;
+    cursor:pointer;min-height:38px;
+  }
+  .city-mobile-dock button.active{background:#b0d9bd;color:#112822;border-color:#c5f1d0;font-weight:700}
+  .city-mobile-dock button:focus-visible{outline:2px solid #d5f5dc;outline-offset:3px}
+}
+@media(max-width:355px){
+  .city-mobile-dock{gap:4px;padding:6px;left:6px;right:6px}
+  .city-mobile-dock button{padding:9px 7px;font-size:11px}
+}
