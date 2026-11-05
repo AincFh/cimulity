@@ -50,6 +50,24 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
             time.sleep(.45)
         assert snap["canvas"] and snap["newCity"] and snap["pause"],snap
         browser.save_screenshot(str(PROOF/"city-desktop.png"))
+        # Save Vault: operate real buttons, validate a downloaded portable
+        # snapshot and confirm a corrupted upload cannot be offered for restore.
+        browser.find_element(By.CSS_SELECTOR,'.city-desktop-vault').click()
+        assert browser.find_element(By.CSS_SELECTOR,'.city-vault-dialog[role="dialog"]').is_displayed()
+        browser.save_screenshot(str(PROOF/"city-vault-desktop.png"))
+        browser.find_element(By.CSS_SELECTOR,'.city-vault-primary').click()
+        time.sleep(.35)
+        assert 'Backup downloaded' in browser.find_element(By.CSS_SELECTOR,'.city-vault-message').text
+        badfile=PROOF/"city-invalid-test.json"
+        badfile.write_text('{"not":"a save"}')
+        browser.find_element(By.ID,'city-vault-file').send_keys(str(badfile.resolve()))
+        for _ in range(20):
+            if browser.find_elements(By.CSS_SELECTOR,'.city-vault-error'): break
+            time.sleep(.1)
+        assert browser.find_element(By.CSS_SELECTOR,'.city-vault-error').is_displayed()
+        assert not browser.find_elements(By.CSS_SELECTOR,'.city-vault-danger'),"Bad backup offered for restore"
+        browser.find_element(By.CSS_SELECTOR,'.city-vault-close').click()
+
         pause=browser.find_element(By.XPATH,"//button[contains(., 'Pause')]")
         pause.click()
         time.sleep(.15)
@@ -98,6 +116,13 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         mobile["layout"]=layout
         mobile["toolsToggle"]=True
         mobile["statsToggle"]=True
+        # Mobile access to the same save manager must not reopen tool drawers.
+        browser.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='Saves']").click()
+        assert browser.find_element(By.CSS_SELECTOR,'.city-vault-dialog[role="dialog"]').is_displayed()
+        assert browser.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='false'
+        browser.save_screenshot(str(PROOF/"city-vault-mobile.png"))
+        browser.find_element(By.CSS_SELECTOR,'.city-vault-close').click()
+        mobile["saveVault"]=True
         errors=[e["message"] for e in browser.get_log("browser") if e["level"]=="SEVERE"]
         local_errors=[e for e in errors if "127.0.0.1" in e or "Uncaught" in e]
         assert not local_errors,local_errors

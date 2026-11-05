@@ -11,6 +11,7 @@ import { GameCanvas } from './components/GameCanvas';
 import { GameHUD } from './components/GameHUD';
 import { TileInfoPanel } from './components/TileInfoPanel';
 import { Toolbar } from './components/Toolbar';
+import { CityVault } from './components/CityVault';
 import { Tool } from '@/game/tools';
 import type { DataView } from '@/game/render/dataView';
 import { STARTING_FUNDS, EMPTY_CITY_HAPPINESS } from '@/game/core/World';
@@ -35,6 +36,7 @@ export default function Home() {
   const [paused, setPaused] = useState(false);
   // On narrow screens the map stays unobstructed until a tool or stats panel is opened.
   const [mobilePanel, setMobilePanel] = useState<'tools' | 'hud' | null>(null);
+  const [vaultOpen, setVaultOpen] = useState(false);
   // React state is the single source of truth for the active data-view overlay.
   // useState's setter is already stable so no useCallback is needed.
   const [dataView, setDataView] = useState<DataView>('none');
@@ -143,6 +145,7 @@ export default function Home() {
         onPauseChange={handlePauseSync}
         dataView={dataView}
       />
+      <button type="button" className="city-desktop-vault" onClick={() => setVaultOpen(true)} aria-haspopup="dialog">Saves · 存档</button>
       <button
         className="city-desktop-new"
         onClick={handleNewCity}
@@ -214,8 +217,9 @@ export default function Home() {
           aria-expanded={mobilePanel === 'hud'} aria-controls="city-mobile-hud"
           onClick={() => setMobilePanel(mobilePanel === 'hud' ? null : 'hud')}>Stats</button>
         <button type="button" onClick={handlePauseClick}>{paused ? 'Resume' : 'Pause'}</button>
-        <button type="button" onClick={handleNewCity} title="Start a new city (asks for confirmation)">New</button>
+        <button type="button" onClick={() => { setMobilePanel(null); setVaultOpen(true); }} aria-haspopup="dialog">Saves</button>
       </div>
+      {vaultOpen && <CityVault onClose={() => setVaultOpen(false)} onNewCity={handleNewCity} />}
     </div>
   );
 }
