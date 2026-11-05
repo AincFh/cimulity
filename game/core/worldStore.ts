@@ -298,6 +298,26 @@ export function saveWorld(world: World): void {
   }
 }
 
+/**
+ * Atomically install a portable backup after validating its complete world
+ * envelope. On failure the current local save AND running singleton remain
+ * untouched; on success the next page load hydrates the imported city.
+ */
+export function installCityBackup(worldJSON: string): boolean {
+  const candidate = new World(MAP_WIDTH, MAP_HEIGHT, { regenerate: false });
+  if (!deserializeWorldInto(candidate, worldJSON)) return false;
+  try {
+    if (typeof localStorage === 'undefined') return false;
+    localStorage.setItem(STORAGE_KEY, worldJSON);
+  } catch {
+    return false;
+  }
+  // An old running GameSession must not be reused after a backup restore.
+  delete store.__cimulityWorld;
+  delete store.__cimulityWorldGuard;
+  return true;
+}
+
 /** Remove the persisted save (used by "New City"). */
 export function clearSave(): void {
   try {
