@@ -205,16 +205,16 @@ export default function Home() {
       <div className="city-mobile-dock" aria-label="城市建设移动控制栏">
         <div className="city-mobile-metrics" aria-live="off">
           <strong>◈ {Math.round(sim.money).toLocaleString('en-US')}</strong>
-          <span>人口 {sim.population.toLocaleString('en-US')}</span>
+          <span>POP {sim.population.toLocaleString('en-US')}</span>
         </div>
         <button type="button" className={mobilePanel === 'tools' ? 'active' : ''}
           aria-expanded={mobilePanel === 'tools'} aria-controls="city-mobile-tools"
-          onClick={() => setMobilePanel(mobilePanel === 'tools' ? null : 'tools')}>建造</button>
+          onClick={() => setMobilePanel(mobilePanel === 'tools' ? null : 'tools')}>Build</button>
         <button type="button" className={mobilePanel === 'hud' ? 'active' : ''}
           aria-expanded={mobilePanel === 'hud'} aria-controls="city-mobile-hud"
-          onClick={() => setMobilePanel(mobilePanel === 'hud' ? null : 'hud')}>统计</button>
-        <button type="button" onClick={handlePauseClick}>{paused ? '继续' : '暂停'}</button>
-        <button type="button" onClick={handleNewCity} title="清空现有城市并新建">新城</button>
+          onClick={() => setMobilePanel(mobilePanel === 'hud' ? null : 'hud')}>Stats</button>
+        <button type="button" onClick={handlePauseClick}>{paused ? 'Resume' : 'Pause'}</button>
+        <button type="button" onClick={handleNewCity} title="Start a new city (asks for confirmation)">New</button>
       </div>
     </div>
   );
