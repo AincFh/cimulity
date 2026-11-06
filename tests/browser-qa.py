@@ -50,6 +50,22 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
             time.sleep(.45)
         assert snap["canvas"] and snap["newCity"] and snap["pause"],snap
         browser.save_screenshot(str(PROOF/"city-desktop.png"))
+        # Real goals UI: uses current sim fields; does not seed or fake progress.
+        browser.find_element(By.CSS_SELECTOR,'[data-campaign-trigger]').click()
+        goals=browser.execute_script("""return (() => ({
+          title:document.querySelector('#campaign-heading')?.textContent,
+          chapters:document.querySelectorAll('[data-campaign-chapter]').length,
+          current:document.querySelector('[data-campaign-current]')?.textContent,
+          first:document.querySelector('[data-campaign-chapter="foundation"]')?.getAttribute('data-campaign-status'),
+          workers:document.querySelectorAll('[data-goal-metric="employed"]').length,
+          totalBars:document.querySelectorAll('.campaign-track[role="progressbar"]').length
+        }))()""")
+        assert goals["chapters"]==6 and goals["first"]=="active",goals
+        assert goals["current"]=="Foundations" and goals["totalBars"]>=2,goals
+        browser.save_screenshot(str(PROOF/"city-career-desktop.png"))
+        browser.find_element(By.CSS_SELECTOR,'.campaign-close').click()
+        assert not browser.find_elements(By.CSS_SELECTOR,'.campaign-dialog')
+
         # Save Vault: operate real buttons, validate a downloaded portable
         # snapshot and confirm a corrupted upload cannot be offered for restore.
         browser.find_element(By.CSS_SELECTOR,'.city-desktop-vault').click()
@@ -99,6 +115,25 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert layout["dockVisible"] and layout["dockBottom"]<=layout["viewportHeight"],layout
         assert not layout["horizontalOverflow"],layout
         browser.save_screenshot(str(PROOF/"city-mobile-map-unobstructed.png"))
+        # Mission launcher must stay above the bottom dock and be usable by touch.
+        career=browser.execute_script("""return (() => {
+           const b=document.querySelector('[data-campaign-trigger]').getBoundingClientRect();
+           const d=document.querySelector('.city-mobile-dock').getBoundingClientRect();
+           return {top:b.top,bottom:b.bottom,dockTop:d.top,left:b.left,right:b.right,screen:innerWidth}
+        })()""")
+        assert career["bottom"]<career["dockTop"] and career["left"]>=0 and career["right"]<=career["screen"]+1,career
+        browser.find_element(By.CSS_SELECTOR,'[data-campaign-trigger]').click()
+        modal=browser.execute_script("""return (() => {
+          const el=document.querySelector('.campaign-dialog');
+          const b=el.getBoundingClientRect();
+          return {left:b.left,right:b.right,bottom:b.bottom,height:innerHeight,
+             chapters:document.querySelectorAll('[data-campaign-chapter]').length};
+        })()""")
+        assert modal["left"]>=0 and modal["right"]<=career["screen"]+1 and modal["chapters"]==6,modal
+        browser.save_screenshot(str(PROOF/"city-career-mobile.png"))
+        browser.find_element(By.CSS_SELECTOR,'.campaign-close').click()
+        mobile["careerGoals"]=True
+
         build=browser.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='Build']")
         build.click()
         assert browser.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='true'
