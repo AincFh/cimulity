@@ -27,7 +27,7 @@ export interface CityGoalRule {
   label: string;
   target: number;
   direction: 'atLeast' | 'atMost';
-  unit: 'people' | 'coins' | 'ratio' | 'percent';
+  unit: 'people' | 'coins' | 'ratio' | 'percent' | 'funding';
 }
 
 export interface CityCampaignChapter {
@@ -57,7 +57,7 @@ export const CITY_CAMPAIGN: readonly CityCampaignChapter[] = [
   {id:'balanced',title:'Balanced Books',subtitle:'Make the budget sustainable',
     guidance:'Increase the tax base and avoid overbuilding expensive services before population can fund them.',
     goals:[atLeast('population','Residents',50,'people'),atLeast('net','Projected monthly surplus',0,'coins'),
-      atLeast('serviceFundingPerMille','Upkeep paid',1000,'percent')]},
+      atLeast('serviceFundingPerMille','Upkeep paid',1000,'funding')]},
   {id:'community',title:'A Place to Live',subtitle:'Make prosperity visible to citizens',
     guidance:'Provide road-connected services and parks, maintain jobs and keep public finances healthy.',
     goals:[atLeast('population','Residents',80,'people'),atLeast('happiness','City happiness',.58,'percent'),
@@ -71,7 +71,7 @@ export const CITY_CAMPAIGN: readonly CityCampaignChapter[] = [
     goals:[atLeast('population','Residents',200,'people'),atLeast('money','Treasury reserve',15000,'coins'),
       atLeast('net','Projected monthly surplus',300,'coins'),
       atLeast('happiness','City happiness',.68,'percent'),
-      atLeast('serviceFundingPerMille','Upkeep paid',1000,'percent')]},
+      atLeast('serviceFundingPerMille','Upkeep paid',1000,'funding')]},
 ] as const;
 
 export interface GoalEvaluation extends CityGoalRule {
@@ -124,7 +124,8 @@ export function cityGoalProgress(rule:CityGoalRule,value:number):number{
   return clamp01(rule.target/value);
 }
 export function cityGoalText(value:number,unit:CityGoalRule['unit']):string{
-  if(unit==='percent')return Math.round(value*(unit==='percent'&&value>1? .1:100))+'%';
+  if(unit==='percent')return Math.round(value*100)+'%';
+  if(unit==='funding')return Math.round(value/10)+'%';
   if(unit==='ratio')return value.toFixed(2);
   return Math.round(value).toLocaleString('en-US');
 }
