@@ -14,6 +14,16 @@ Cimulity is a SimCity-style city builder built with Next.js, TypeScript, and Pix
 
 ![Cimulity gameplay — an isometric city with roads, R/C/I buildings, service buildings, parks, and a coastline](docs/screenshots/city-overview.png)
 
+## City Hall campaign — six real construction goals
+
+**City Hall** opens a full six-stage, playable city career. It turns the existing free-form simulation into a meaningful challenge: establish a neighbourhood, create road-reachable jobs, balance monthly tax income and upkeep, raise happiness, control traffic, and finally maintain the population, employment, budget surplus and reserves needed for a regional capital.
+
+Each requirement is computed live from the **same World metrics** used for the actual building growth, population, labour market, financial settlement and traffic simulation. Building new residential zones, connecting them to services and balancing finances affects the career immediately; clicking City Hall does not grant free income, spawn residents or unlock stages automatically. Regressions in your actual city can remove recognition, making the endgame a **sustained city-health challenge** rather than a free claim button.
+
+The City Hall progress panel is available on desktop and phones, with explanations for every live goal, percentage bars and a final recognition state. It has no separate save key or schema upgrade: whenever a world is saved, loaded, restored from a portable backup or reset, its real metrics are used to re-evaluate the six stages without corrupting or discarding existing cities.
+
+Pure Vitest tests cover goal math, labour and budget semantics, gating, resets/regression, safety and display units. The GitHub Pages build is tested in real Chromium for the openable City Hall panel and responsive touch layout.
+
 ## Project Status
 
 MVP-1 is playable and in active development. It is an open-ended sandbox: there is no win/lose condition, and the treasury floors at 0 instead of going into debt.
