@@ -133,3 +133,73 @@ body {
   .city-vault-footer{flex-direction:column;align-items:flex-start}
   .city-vault-new{align-self:stretch}
 }
+
+
+/* City Hall — a real-time, goal-based campaign built on the saved city.
+ * No full-screen overlay unless requested. The map remains playable otherwise.
+ */
+.campaign-trigger{
+ position:fixed;right:18px;bottom:18px;z-index:1100;
+ display:flex;flex-direction:column;gap:4px;align-items:flex-start;
+ width:180px;padding:11px 13px;cursor:pointer;touch-action:manipulation;
+ border:1px solid rgba(176,228,211,.55);border-radius:13px;
+ background:linear-gradient(125deg,#123b3b,#14262d);color:#e1f1e6;
+ box-shadow:0 9px 34px #001a23b9;font:650 13px system-ui,sans-serif;
+}
+.campaign-trigger span{font-weight:800;letter-spacing:.01em;font-size:14px}
+.campaign-trigger strong{font:700 9px ui-monospace,Consolas,monospace;letter-spacing:.10em;color:#a4d8bd}
+.campaign-trigger:hover{border-color:#cee9ca;background:#1a4e4a}
+.campaign-trigger:focus-visible,.campaign-dialog button:focus-visible{outline:3px solid #dbf6d9;outline-offset:3px}
+.campaign-overlay{
+ position:fixed;inset:0;z-index:2100;display:grid;place-items:center;
+ padding:18px;background:rgba(0,12,22,.78);backdrop-filter:blur(8px);
+ font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+.campaign-dialog{
+ width:min(100%,670px);max-height:min(92dvh,850px);overflow:auto;
+ color:#edf5ef;background:linear-gradient(150deg,#213942,#10242e 70%);
+ border:1px solid #d2eee638;border-radius:20px;box-shadow:0 26px 100px #000b14db;padding:27px;
+}
+.campaign-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.campaign-heading span{font:700 10px ui-monospace,Consolas,monospace;letter-spacing:.16em;color:#a2d1bf}
+.campaign-heading h2{font-size:clamp(23px,3vw,32px);line-height:1.15;letter-spacing:-.035em;margin:7px 0;color:#f0f9f4}
+.campaign-close{width:38px;height:38px;flex-shrink:0;border:1px solid #ffffff30;border-radius:50%;background:#ffffff10;color:#f4fff7;cursor:pointer;font-size:24px}
+.campaign-intro{font-size:13px;line-height:1.7;color:#b5c8c3;margin:13px 0 19px}
+.campaign-summary{display:grid;grid-template-columns:1fr 1fr 1.1fr;gap:9px;margin-bottom:18px}
+.campaign-summary>div{border:1px solid #ffffff25;border-radius:10px;padding:13px;background:#09232b9e;min-width:0}
+.campaign-summary small{display:block;font:700 9px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.06em;color:#9ebfb4}
+.campaign-summary strong{display:block;margin-top:8px;font-size:18px;overflow-wrap:anywhere}
+.campaign-list{display:grid;gap:8px}
+.campaign-chapter{background:#112d3796;border:1px solid #ffffff20;border-radius:11px;overflow:hidden}
+.campaign-chapter>header{padding:13px 14px;display:grid;grid-template-columns:33px minmax(0,1fr) auto;align-items:center;gap:10px}
+.campaign-number{font:700 12px ui-monospace,monospace;color:#b2c5b4}
+.campaign-chapter header small{font-size:11px;color:#a6bdb6}
+.campaign-chapter h3{font-size:15px;font-weight:700;margin:3px 0 0}
+.campaign-stage-status{font:800 9px ui-monospace,monospace;letter-spacing:.04em;color:#94b2a5}
+.campaign-active{border-color:#a9dbbb8a;background:#153b3eb5}
+.campaign-active .campaign-stage-status{color:#bee8ad}
+.campaign-complete{border-color:#559a7775}
+.campaign-complete .campaign-stage-status{color:#9ae1ad}
+.campaign-locked{opacity:.59}
+.campaign-chapter-detail{padding:0 15px 15px}
+.campaign-chapter-detail>p{font-size:12px;color:#b4c8bf;line-height:1.6;margin:0 0 13px}
+.campaign-goals{display:grid;gap:11px}
+.campaign-goal-label{display:flex;justify-content:space-between;gap:12px;font-size:12px}
+.campaign-goal-label strong{text-align:right;color:#dce9d9;font:650 11px ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+.campaign-check{margin-right:7px;color:#8bc79e}
+.campaign-track{height:6px;background:#223f49;border-radius:8px;overflow:hidden;margin-top:6px}
+.campaign-track span{display:block;height:100%;background:linear-gradient(90deg,#5da999,#a6dbac);transition:width .25s ease}
+.campaign-victory{padding:13px;background:#235c43;border:1px solid #8dd6a4;border-radius:10px;margin-bottom:12px;font-size:13px}
+.campaign-dialog footer{border-top:1px solid #ffffff20;margin-top:17px;padding-top:14px;font-size:11px;color:#91ada4;line-height:1.6}
+@media(max-width:640px){
+ .campaign-trigger{bottom:83px;right:10px;width:151px;padding:9px 11px}
+ .campaign-trigger span{font-size:12px}
+ .campaign-trigger strong{font-size:8px}
+ .campaign-overlay{padding:8px}
+ .campaign-dialog{max-height:calc(100dvh - 20px);padding:19px 15px 16px;border-radius:15px}
+ .campaign-summary{grid-template-columns:1fr 1fr}
+ .campaign-summary>div:last-child{grid-column:1/-1}
+ .campaign-goal-label{font-size:11px}
+ .campaign-chapter>header{grid-template-columns:25px minmax(0,1fr) auto;gap:7px}
+}
+@media(prefers-reduced-motion:reduce){.campaign-track span{transition:none}}
