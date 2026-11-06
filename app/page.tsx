@@ -12,6 +12,7 @@ import { GameHUD } from './components/GameHUD';
 import { TileInfoPanel } from './components/TileInfoPanel';
 import { Toolbar } from './components/Toolbar';
 import { CityVault } from './components/CityVault';
+import { CityCampaignPanel } from './components/CityCampaignPanel';
 import { Tool } from '@/game/tools';
 import type { DataView } from '@/game/render/dataView';
 import { STARTING_FUNDS, EMPTY_CITY_HAPPINESS } from '@/game/core/World';
@@ -219,6 +220,14 @@ export default function Home() {
         <button type="button" onClick={handlePauseClick}>{paused ? 'Resume' : 'Pause'}</button>
         <button type="button" onClick={() => { setMobilePanel(null); setVaultOpen(true); }} aria-haspopup="dialog">Saves</button>
       </div>
+      <CityCampaignPanel vitals={{
+        tick:sim.tick,
+        population:sim.population,money:sim.money,
+        employed:sim.employed,unemployed:sim.unemployed,
+        monthlyIncome:sim.monthlyIncome,monthlyUpkeep:sim.monthlyUpkeep,
+        happiness:sim.happiness,congestion:sim.congestion,
+        serviceFundingPerMille:sim.serviceFundingPerMille
+      }} />
       {vaultOpen && <CityVault onClose={() => setVaultOpen(false)} onNewCity={handleNewCity} />}
     </div>
   );
