@@ -63,13 +63,13 @@ export function CityCampaignPanel({vitals}:{vitals:CityCampaignVitals}){
     <div className="campaign-overlay" onMouseDown={event=>{if(event.target===event.currentTarget)close();}}>
      <section role="dialog" aria-modal="true" aria-labelledby="campaign-heading" className="campaign-dialog">
       <header className="campaign-heading">
-       <div><span>CAREER MODE · MAYOR'S PROGRAMME</span><h2 id="campaign-heading">Build a city worth staying in.</h2></div>
+       <div><span>CAREER MODE · MAYOR’S PROGRAMME</span><h2 id="campaign-heading">Build a city worth staying in.</h2></div>
        <button type="button" className="campaign-close" onClick={close} aria-label="Close City Hall">×</button>
       </header>
       <p className="campaign-intro">Six chapters from the first neighbourhood to a thriving regional capital.
        All targets use live population, employment, treasury, public funding, happiness and
        congestion from the actual simulation. No fake tasks, no hidden currency or paid rerolls.
-       Progress can fall if the city's conditions worsen.</p>
+       Progress can fall if the city’s conditions worsen.</p>
       <div className="campaign-summary" aria-live="polite">
        <div><small>CHAPTERS CURRENTLY MET</small><strong>{campaign.complete} / {campaign.total}</strong></div>
        <div><small>CAREER PROGRESS</small><strong>{Math.round(campaign.progress*100)}%</strong></div>
